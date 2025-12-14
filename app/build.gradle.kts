@@ -6,9 +6,7 @@ plugins {
 
 android {
     namespace = "com.mmmagomedov.notes"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.mmmagomedov.notes"
@@ -57,4 +55,10 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    implementation(libs.slf4j.api)
+    implementation(libs.logback.android)
+
+    // leakи приложения
+    debugImplementation(libs.leakcanary.android)
 }
