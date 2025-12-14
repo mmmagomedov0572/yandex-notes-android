@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -24,8 +25,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidNotesTheme {
+                val context = LocalContext.current
+                val storage = remember { FileNotebook(context) } // избегаем утечки при рекомпозиции с помощью remember
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val storage = FileNotebook(context = LocalContext.current)
                     storage.add(
                         Note(
                             title = "note 1",
