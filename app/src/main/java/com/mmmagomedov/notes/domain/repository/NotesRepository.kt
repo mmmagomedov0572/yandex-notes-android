@@ -7,11 +7,11 @@ import java.io.File
 interface NotesRepository {
     val notes: Flow<List<Note>>
 
-    fun addNote(note: Note)
-     fun getNoteByUid(uid: String): Note?
+    suspend fun addNote(note: Note)
+    suspend fun getNoteByUid(uid: String): Note?
    // fun updateNote(note: Note)
-    fun removeNote(uid: String): Boolean
+    suspend fun removeNote(uid: String): Boolean
 
-    fun saveToFile()
+    suspend fun saveToFile()
     fun loadFromFile()
 }
