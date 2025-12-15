@@ -73,4 +73,8 @@ class FileNotebook(
         _notes.value = loaded
         log.info("Loaded ${loaded.size} notes")
     }
+
+    override suspend fun replaceAll(notes: List<Note>) {
+        _notes.value = notes
+    }
 }
