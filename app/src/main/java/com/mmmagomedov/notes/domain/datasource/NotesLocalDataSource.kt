@@ -8,6 +8,7 @@ interface NotesLocalDataSource {
     suspend fun getByUid(uid: String): Note?
     suspend fun upsert(note: Note)
     suspend fun delete(uid: String): Boolean
+    suspend fun replaceAll(notes: List<Note>)
     suspend fun writeToDisk()
     suspend fun loadFromDisk()
 }
