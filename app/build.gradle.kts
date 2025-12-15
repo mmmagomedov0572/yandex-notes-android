@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
+    kotlin("plugin.serialization") version "2.1.10"
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
 }
@@ -66,10 +67,21 @@ dependencies {
     debugImplementation(libs.leakcanary.android)
 
     // зависимости Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-compiler:2.48")
+    implementation("com.google.dagger:hilt-android:2.57.1")
+    kapt("com.google.dagger:hilt-compiler:2.57.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.compose.material:material-icons-extended")
+
+    // retrofit2
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    implementation(libs.androidx.room.runtime)
+    kapt("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
+    implementation(libs.androidx.room.ktx)
 }
