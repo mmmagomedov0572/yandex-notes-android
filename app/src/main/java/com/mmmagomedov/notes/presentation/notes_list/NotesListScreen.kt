@@ -8,21 +8,29 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mmmagomedov.notes.domain.model.Note
 import com.mmmagomedov.notes.presentation.notes_list.components.NoteCard
+import com.mmmagomedov.notes.presentation.notes_list.components.SwipeDeleteBackground
+import kotlinx.coroutines.launch
 
 @Composable
 fun NotesListScreen(
@@ -82,12 +90,50 @@ fun NotesListScreen(
                     items = notes,
                     key = { it.uid }
                 ) { note ->
-                    NoteCard(
+                    NoteSwipeItem(
                         note = note,
-                        onClick = { onNoteModify(note.uid) }
+                        onOpen = { onNoteModify(note.uid) },
+                        onDelete = { viewModel.delete(note.uid) }
                     )
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NoteSwipeItem(
+    note: Note,
+    onOpen: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val state = rememberSwipeToDismissBoxState(
+        confirmValueChange = { newValue ->
+            if (newValue == SwipeToDismissBoxValue.EndToStart) {
+                true
+            } else {
+                false
+            }
+        }
+    )
+
+    SwipeToDismissBox(
+        state = state,
+        enableDismissFromStartToEnd = false,
+        enableDismissFromEndToStart = true,
+        backgroundContent = {
+            SwipeDeleteBackground(
+                progress = state.progress,
+                onDeleteClick = onDelete
+            )
+        },
+        modifier = modifier
+    ) {
+        NoteCard(
+            note = note,
+            onClick = onOpen,
+        )
     }
 }
