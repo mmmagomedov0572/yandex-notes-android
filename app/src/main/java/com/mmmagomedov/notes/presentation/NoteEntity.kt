@@ -23,8 +23,8 @@ fun NoteEntity.toNote(): Note = Note(
     content = content,
     color = color,
     importance = importance,
+    selfDestructAt = selfDestructAt
 )
-
 
 fun Note.toUiState(): NoteEntity = NoteEntity(
     uid = uid,
