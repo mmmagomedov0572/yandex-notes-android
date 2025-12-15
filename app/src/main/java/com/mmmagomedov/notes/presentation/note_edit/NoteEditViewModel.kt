@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mmmagomedov.notes.domain.model.Note
-import com.mmmagomedov.notes.domain.repository.NotesRepository
+import com.mmmagomedov.notes.domain.repository.SyncNotesRepository
 import com.mmmagomedov.notes.presentation.NoteEntity
 import com.mmmagomedov.notes.presentation.toNote
 import com.mmmagomedov.notes.presentation.toUiState
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteEditViewModel @Inject constructor(
-    private val repository: NotesRepository
+    private val repository: SyncNotesRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(NoteEditUiState())
@@ -56,8 +56,7 @@ class NoteEditViewModel @Inject constructor(
     fun onSaveClick(onDone: () -> Unit) {
         viewModelScope.launch {
             if (!uiState.canSave) return@launch
-            repository.addNote(uiState.note.toNote())
-            repository.saveToFile()
+            repository.upsert(uiState.note.toNote())
             onDone()
         }
     }

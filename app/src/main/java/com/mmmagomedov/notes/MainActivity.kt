@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.mmmagomedov.notes.data.FileNotebook
+import com.mmmagomedov.notes.data.datasource.FileNotebook
 import com.mmmagomedov.notes.domain.model.Note
 import com.mmmagomedov.notes.ui.theme.AndroidNotesTheme
 import dagger.hilt.android.AndroidEntryPoint
