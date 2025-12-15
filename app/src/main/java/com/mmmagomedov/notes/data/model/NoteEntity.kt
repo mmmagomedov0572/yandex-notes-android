@@ -24,7 +24,9 @@ fun NoteEntity.toNote(): Note = Note(
         "HIGH" -> Note.Importance.HIGH
         "LOW" -> Note.Importance.LOW
         else -> Note.Importance.NORMAL
-    }
+    },
+    selfDestructAt = selfDestructAt
+
 )
 
 fun Note.toEntity(): NoteEntity {
