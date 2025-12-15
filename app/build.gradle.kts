@@ -72,4 +72,10 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.compose.material:material-icons-extended")
+
+    // retrofit2
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
 }
