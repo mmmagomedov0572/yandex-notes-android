@@ -1,7 +1,11 @@
 package com.mmmagomedov.notes.data
 
 import android.content.Context
-import com.mmmagomedov.notes.domain.Note
+import com.mmmagomedov.notes.domain.model.Note
+import com.mmmagomedov.notes.domain.repository.NotesRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flowOf
 import org.json.JSONArray
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -9,19 +13,19 @@ import java.io.File
 class FileNotebook(
     context: Context,
     fileName: String = "notes.json"
-) {
+) : NotesRepository {
     private val log = LoggerFactory.getLogger(FileNotebook::class.java)
 
     private val file: File = File(context.applicationContext.filesDir, fileName)
     private val _notes = mutableListOf<Note>()
-    val notes: List<Note> get() = _notes.toList()
+    override val notes: Flow<List<Note>> get() = flowOf(_notes.toList())
 
     init {
         log.info("Init FileNotebook, file=${file.absolutePath}")
-        loadFromFile(file)
+        loadFromFile()
     }
 
-    fun add(note: Note) {
+    override fun addNote(note: Note) {
         val idx = _notes.indexOfFirst { it.uid == note.uid }
         if (idx >= 0) {
             _notes[idx] = note
@@ -32,13 +36,17 @@ class FileNotebook(
         }
     }
 
-    fun remove(uid: String): Boolean {
+    override fun getNoteByUid(uid: String): Note? {
+        return _notes.find { it.uid == uid }
+    }
+
+    override fun removeNote(uid: String): Boolean {
         val removed = _notes.removeAll { it.uid == uid }
         log.info("Remove note uid=$uid, removed=$removed")
         return removed
     }
 
-    fun saveToFile(file: File) {
+    override fun saveToFile() {
         log.info("Saving ${_notes.size} notes to file=${file.absolutePath}")
 
         val array = JSONArray()
@@ -46,7 +54,7 @@ class FileNotebook(
         file.writeText(array.toString())
     }
 
-    fun loadFromFile(file: File = this.file) {
+    override fun loadFromFile() {
         if (!file.exists()) return
         val text = file.readText()
         val array = JSONArray(text)
