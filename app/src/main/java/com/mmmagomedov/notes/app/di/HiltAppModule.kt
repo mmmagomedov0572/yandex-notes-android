@@ -5,10 +5,13 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.mmmagomedov.notes.data.api.NotesApi
 import com.mmmagomedov.notes.data.datasource.BackendNotesRemoteDataSource
 import com.mmmagomedov.notes.data.datasource.FileNotebook
+import com.mmmagomedov.notes.data.datasource.LocalRoomDataSource
 import com.mmmagomedov.notes.data.repository.SyncNotesRepositoryImpl
+import com.mmmagomedov.notes.data.room.RoomNotesDatabase
 import com.mmmagomedov.notes.domain.datasource.NotesLocalDataSource
 import com.mmmagomedov.notes.domain.datasource.NotesRemoteDataSource
 import com.mmmagomedov.notes.domain.datasource.TokenProvider
+import com.mmmagomedov.notes.domain.model.Note
 import com.mmmagomedov.notes.domain.repository.SyncNotesRepository
 import dagger.Module
 import dagger.Provides
@@ -73,11 +76,11 @@ object HiltAppModule {
     fun provideNotesApi(retrofit: Retrofit): NotesApi =
         retrofit.create(NotesApi::class.java)
 
-    @Provides
-    @Singleton
-    fun provideNotesLocalDataSource(
-        @ApplicationContext context: Context
-    ): NotesLocalDataSource = FileNotebook(context)
+//    @Provides
+//    @Singleton
+//    fun provideNotesLocalDataSource(
+//        @ApplicationContext context: Context
+//    ): NotesLocalDataSource = FileNotebook(context)
 
     @Provides
     @Singleton
@@ -88,6 +91,17 @@ object HiltAppModule {
         api = api,
         tokenProvider = tokenProvider
     )
+
+    @Provides
+    @Singleton
+    fun provideLocalRoomDataSource(
+        @ApplicationContext
+        context: Context
+    ): NotesLocalDataSource {
+        return LocalRoomDataSource(
+            noteDao = RoomNotesDatabase.getInstance(context).noteDao()
+        )
+    }
 
     @Provides
     @Singleton

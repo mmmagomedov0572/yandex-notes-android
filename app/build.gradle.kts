@@ -80,4 +80,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.retrofit)
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    implementation(libs.androidx.room.runtime)
+    kapt("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
+    implementation(libs.androidx.room.ktx)
 }

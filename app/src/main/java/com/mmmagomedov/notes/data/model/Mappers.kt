@@ -1,6 +1,7 @@
 package com.mmmagomedov.notes.data.model
 
 import android.graphics.Color
+import android.icu.lang.UCharacter.SentenceBreak.SEP
 import com.mmmagomedov.notes.domain.model.Note
 
 fun Note.toDto(deviceId: String = "my_phone"): NoteDto {
@@ -8,7 +9,7 @@ fun Note.toDto(deviceId: String = "my_phone"): NoteDto {
 
     return NoteDto(
         id = this.uid,
-        text = this.title,
+        text = "$title/mmmagomedov$content",
         importance = when (this.importance) {
             Note.Importance.LOW -> "low"
             Note.Importance.NORMAL -> "basic"
@@ -27,21 +28,26 @@ fun Note.toDto(deviceId: String = "my_phone"): NoteDto {
     )
 }
 
-fun NoteDto.toDomain(): Note = Note(
-    uid = this.id,
-    title = this.text,
-    content = "",
-    importance = when (this.importance.lowercase()) {
-        "low" -> Note.Importance.LOW
-        "important" -> Note.Importance.HIGH
-        else -> Note.Importance.NORMAL
-    },
-    selfDestructAt = this.deadline,
-    color = this.color?.let {
-        try {
-            Color.parseColor(it)
-        } catch (e: IllegalArgumentException) {
-            Color.WHITE
-        }
-    } ?: Color.WHITE,
-)
+fun NoteDto.toDomain(): Note {
+    val titlePart = text.substringBefore("/mmmagomedov")
+    val contentPart = text.substringAfter("/mmmagomedov", missingDelimiterValue = "")
+
+    return Note(
+        uid = this.id,
+        title = titlePart,
+        content = contentPart,
+        importance = when (this.importance.lowercase()) {
+            "low" -> Note.Importance.LOW
+            "important" -> Note.Importance.HIGH
+            else -> Note.Importance.NORMAL
+        },
+        selfDestructAt = this.deadline,
+        color = this.color?.let {
+            try {
+                Color.parseColor(it)
+            } catch (e: IllegalArgumentException) {
+                Color.WHITE
+            }
+        } ?: Color.WHITE,
+    )
+}
