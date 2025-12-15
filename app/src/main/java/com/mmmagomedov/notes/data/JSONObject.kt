@@ -1,7 +1,7 @@
 package com.mmmagomedov.notes.data
 
 import android.graphics.Color
-import com.mmmagomedov.notes.domain.Note
+import com.mmmagomedov.notes.domain.model.Note
 import org.json.JSONObject
 import java.util.UUID
 

@@ -13,7 +13,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import androidx.navigation.navArgument
 import com.mmmagomedov.notes.presentation.navigation.Screen
-import com.mmmagomedov.notes.presentation.note_create.NoteCreateScreen
 import com.mmmagomedov.notes.presentation.note_edit.NoteEditScreen
 import com.mmmagomedov.notes.presentation.notes_list.NotesListScreen
 
@@ -41,8 +40,10 @@ fun AndroidNotesApp(
                 composable(
                     route = Screen.NoteAdd.route
                 ) {
-                    NoteCreateScreen(
-                        onBack = { navController.popBackStack() },
+                    NoteEditScreen(
+                        noteId = null,
+                        title = "Создание",
+                        onNavigateBack = { navController.popBackStack() },
                     )
                 }
 
@@ -57,6 +58,7 @@ fun AndroidNotesApp(
                     val noteUid = backStackEntry.arguments?.getString("noteUid")
                     NoteEditScreen(
                         noteId = noteUid,
+                        title = "Редактирование",
                         onNavigateBack = { navController.popBackStack() },
                     )
                 }
